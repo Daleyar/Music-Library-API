@@ -32,9 +32,20 @@ class SongDetail(APIView):
     def get(self, request, pk):
         song = self.get_song(pk=pk)
         serializer = SongSerializer(song)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
         song = self.get_song(pk=pk)
+        if song.favorite:
+            song.likes += 1
         serializer = SongSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        song = self.get_song(pk=pk)
+        serializer = SongSerializer(song)
+        song.delete()
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -7,4 +7,5 @@ class Song(models.Model):
     album = models.CharField(max_length=50)
     release_date = models.DateTimeField()
     genre = models.CharField(max_length=50)
+    favorite = models.BooleanField(default=False, null=True, blank=True)
     likes = models.IntegerField(default=0)
